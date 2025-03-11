@@ -24,26 +24,26 @@ void SetRandom(Tensor& input) {
 }
 
 static void BM_BatchNormOldEigen(benchmark::State& state) {
-  std::shared_ptr<CPUAllocator> alloc = CPUAllocator::Instance();
+  AllocatorPtr alloc = CPUAllocator::Instance();
   const int64_t batch_size = state.range(0);
 
   const TensorShape shape = {batch_size, 64, 75, 75};
   using T = float;
 
-  Tensor* X = new Tensor(DataTypeImpl::GetType<float>(), shape, alloc);
-  SetRandom<T>(*X);
+  Tensor X(DataTypeImpl::GetType<float>(), shape, alloc);
+  SetRandom<T>(X);
   const TensorShape& x_shape = X->Shape();
-  Tensor* Y = new Tensor(DataTypeImpl::GetType<float>(), shape, alloc);
-  Tensor* scale = new Tensor(DataTypeImpl::GetType<float>(), {shape[1]}, alloc);
-  SetRandom<T>(*scale);
-  Tensor* mean = new Tensor(DataTypeImpl::GetType<float>(), {shape[1]}, alloc);
-  SetRandom<T>(*mean);
+  Tensor Y(DataTypeImpl::GetType<float>(), shape, alloc);
+  Tensor scale(DataTypeImpl::GetType<float>(), {shape[1]}, alloc);
+  SetRandom<T>(scale);
+  Tensor* mean(DataTypeImpl::GetType<float>(), {shape[1]}, alloc);
+  SetRandom<T>(mean);
 
-  Tensor* B = new Tensor(DataTypeImpl::GetType<float>(), {shape[1]}, alloc);
-  SetRandom<T>(*B);
+  Tensor B(DataTypeImpl::GetType<float>(), {shape[1]}, alloc);
+  SetRandom<T>(B);
 
-  Tensor* var = new Tensor(DataTypeImpl::GetType<float>(), {shape[1]}, alloc);
-  SetRandom<T>(*var);
+  Tensor var(DataTypeImpl::GetType<float>(), {shape[1]}, alloc);
+  SetRandom<T>(var);
 
   bool is_spatial_ = true;
   double epsilon_ = 1e-5;

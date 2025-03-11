@@ -2144,23 +2144,11 @@ SubGraphCollection_t TensorrtExecutionProvider::GetSupportedList(SubGraphCollect
           for (auto input : node->InputDefs()) {
             auto& n_input = graph_build.GetOrCreateNodeArg(input->Name(), input->TypeAsProto());
             inputs.push_back(&n_input);
-            const ONNX_NAMESPACE::TensorProto* initializer = nullptr;
-            if (graph.GetInitializedTensor(input->Name(), initializer)) {
-              const ONNX_NAMESPACE::TensorProto* subgraph_initializer = nullptr;
-              if (!graph_build.GetInitializedTensor(input->Name(), subgraph_initializer)) {
-                graph_build.AddInitializedTensor(*(initializer));
-              }
-            }
+            graph_utils::MakeInitializerCopyIfNotExist(graph, graph_build, input->Name());
           }
 
           for (auto input : node->ImplicitInputDefs()) {
-            const ONNX_NAMESPACE::TensorProto* initializer = nullptr;
-            if (graph.GetInitializedTensor(input->Name(), initializer)) {
-              const ONNX_NAMESPACE::TensorProto* subgraph_initializer = nullptr;
-              if (!graph_build.GetInitializedTensor(input->Name(), subgraph_initializer)) {
-                graph_build.AddInitializedTensor(*(initializer));
-              }
-            }
+            graph_utils::MakeInitializerCopyIfNotExist(graph, graph_build, input->Name());
           }
           for (auto output : node->OutputDefs()) {
             auto& n_output = graph_build.GetOrCreateNodeArg(output->Name(), output->TypeAsProto());

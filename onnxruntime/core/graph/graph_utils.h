@@ -38,6 +38,16 @@ Checks that new_initializer does not already exist in 'graph' before adding it.
 */
 NodeArg& AddInitializer(Graph& graph, const ONNX_NAMESPACE::TensorProto& new_initializer);
 
+/// <summary>
+/// Adds a new initializer to 'graph' with new_initializer that points to the OrtValue buffer
+/// </summary>
+/// <param name="graph">target graph</param>
+/// <param name="new_initializer">TensorProto with external data pointer</param>
+/// <param name="ort_value">ort_value with data</param>
+/// <returns></returns>
+NodeArg& AddInitializerWithExternalData(Graph& graph, const ONNX_NAMESPACE::TensorProto& new_initializer,
+                                        OrtValue ort_value);
+
 /** Add a new initializer to 'graph'.
  * Checks that new_initializer does not already exist in 'graph' before adding it.
  * @param new_initializer tensor proto that has external data pointing to data within the ort_value

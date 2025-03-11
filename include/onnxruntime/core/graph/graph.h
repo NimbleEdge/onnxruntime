@@ -756,7 +756,7 @@ class Graph {  // NOLINT(clang-analyzer-optin.performance.Padding): preserve exi
   /// <param name="ort_value_initializer">value that contains the initializer tensor. This may
   /// be unallocated for small tensors. Passed by value and can be moved in when chosen.</param>
   Status AddInitializedOrtValue(const ONNX_NAMESPACE::TensorProto& tensor_proto,
-                                OrtValue ort_value_initializer);
+                                const OrtValue& ort_value_initializer);
 #endif
 
   /** Remove the initializer tensor with the provided name from the Graph. */

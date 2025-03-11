@@ -1034,6 +1034,9 @@ struct Graph final {
   const std::unordered_map<std::string, int>& DomainToVersionMap() const noexcept { return g_host->Graph__DomainToVersionMap(this); }
   Status Resolve() { return g_host->Graph__Resolve(this); }
   void AddInitializedTensor(const ONNX_NAMESPACE::TensorProto& tensor) { return g_host->Graph__AddInitializedTensor(this, tensor); }
+  Status AddInitializedOrtValue(const ONNX_NAMESPACE::TensorProto& tensor, const OrtValue& ort_value) {
+    return g_host->Graph__AddInitializedOrtValue(this, tensor, ort_value);
+  }
   Node& AddNode(const std::string& name, const std::string& op_type, const std::string& description, gsl::span<NodeArg* const> input_args, gsl::span<NodeArg* const> output_args, const NodeAttributes* attributes, const std::string& domain) { return g_host->Graph__AddNode(this, name, op_type, description, input_args, output_args, attributes, domain); }
   Node& AddNode(const std::string& name, const std::string& op_type, const std::string& description, gsl::span<NodeArg* const> input_args, gsl::span<NodeArg* const> output_args, NodeAttributes&& attributes, const std::string& domain) { return g_host->Graph__AddNode(this, name, op_type, description, input_args, output_args, std::move(attributes), domain); }
   Node& AddNode(const Node& other) { return g_host->Graph__AddNode(this, other); }

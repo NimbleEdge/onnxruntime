@@ -280,7 +280,7 @@ NodeArg& AddInitializerWithExternalData(Graph& graph, const ONNX_NAMESPACE::Tens
     Tensor::InitOrtValue(std::move(tensor), ort_value);
   }
 
-  ORT_THROW_IF_ERROR(graph.AddInitializedOrtValue(new_initializer, std::move(ort_value)));
+  ORT_THROW_IF_ERROR(graph.AddInitializedOrtValue(new_initializer, ort_value));
   return GetOrCreateNodeArg(graph, new_initializer);
 }
 
@@ -305,10 +305,10 @@ void MakeInitializerCopyIfNotExist(const Graph& src_graph, Graph& dst_graph, con
   if (src_graph.GetInitializedTensor(name, initializer)) {
     // check if the initializer already exists in the destination graph
     const ONNX_NAMESPACE::TensorProto* existing = nullptr;
-    if (!dst_graph.GetConstantInitializer(name, existing)) {
+    if (!dst_graph.GetInitializedTensor(name, existing)) {
       OrtValue ort_value;
       ORT_IGNORE_RETURN_VALUE(src_graph.GetOrtValueInitializer(name, ort_value));
-      ORT_THROW_IF_ERROR(dst_graph.AddInitializedOrtValue(*initializer, std::move(ort_value)));
+      ORT_THROW_IF_ERROR(dst_graph.AddInitializedOrtValue(*initializer, ort_value));
     }
   }
 }
@@ -316,11 +316,13 @@ void MakeInitializerCopyIfNotExist(const Graph& src_graph, Graph& dst_graph, con
 void MakeConstantInitializerCopyIfNotExist(const Graph& src_graph, Graph& dst_graph,
                                            const std::string& name, bool check_outer_scope) {
   const auto* initializer = src_graph.GetConstantInitializer(name, check_outer_scope);
-  const ONNX_NAMESPACE::TensorProto* subgraph_initializer = nullptr;
-  if (!dst_graph.GetInitializedTensor(name, subgraph_initializer)) {
-    OrtValue ort_value;
-    ORT_IGNORE_RETURN_VALUE(src_graph.GetOrtValueInitializer(name, ort_value, check_outer_scope));
-    ORT_THROW_IF_ERROR(dst_graph.AddInitializedOrtValue(*initializer, std::move(ort_value)));
+  if (initializer != nullptr) {
+    const ONNX_NAMESPACE::TensorProto* subgraph_initializer = nullptr;
+    if (!dst_graph.GetInitializedTensor(name, subgraph_initializer)) {
+      OrtValue ort_value;
+      ORT_IGNORE_RETURN_VALUE(src_graph.GetOrtValueInitializer(name, ort_value, check_outer_scope));
+      ORT_THROW_IF_ERROR(dst_graph.AddInitializedOrtValue(*initializer, ort_value));
+    }
   }
 }
 

@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+#include "core/graph/graph_utils.h"
 #include "orttraining/core/graph/graph_augmenter.h"
 
 #include "core/common/logging/logging.h"
@@ -46,11 +47,7 @@ Status GraphAugmenter::AugmentGraph(Graph& graph,
                                     const std::unordered_set<std::string>* p_initializer_names_to_preserve) {
   // Add new initializers to the graph. - no op if it already exists
   for (const auto& tensor_proto : graph_element_defs.Initializers()) {
-    const ONNX_NAMESPACE::TensorProto* exist_initializer = nullptr;
-    if (!graph.GetInitializedTensor(tensor_proto.name(), exist_initializer)) {
-      graph.AddInitializedTensor(tensor_proto);
-      graph.GetOrCreateNodeArg(tensor_proto.name(), nullptr);
-    }
+    graph_utils::MakeInitializerCopyIfNotExist(graph_element_defs, graph, tensor_proto.name());
   }
 
   // Add new nodes to the graph.

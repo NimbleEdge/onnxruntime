@@ -3443,7 +3443,7 @@ void Graph::AddInitializedTensor(const TensorProto& tensor) {
   }
 }
 
-Status Graph::AddInitializedOrtValue(const ONNX_NAMESPACE::TensorProto& tensor, OrtValue ortvalue_initializer) {
+Status Graph::AddInitializedOrtValue(const ONNX_NAMESPACE::TensorProto& tensor, const OrtValue& ortvalue_initializer) {
   ORT_RETURN_IF(name_to_initial_tensor_.count(tensor.name()) > 0, "Attempt to replace the existing tensor");
 
   const gsl::not_null<TensorProto*> tensor_added{graph_proto_->add_initializer()};
@@ -3452,7 +3452,7 @@ Status Graph::AddInitializedOrtValue(const ONNX_NAMESPACE::TensorProto& tensor, 
   name_to_initial_tensor_.emplace(tensor.name(), tensor_added);
 
   if (ortvalue_initializer.IsAllocated()) {
-    ortvalue_initializers_.insert_or_assign(tensor.name(), std::move(ortvalue_initializer));
+    ortvalue_initializers_.insert_or_assign(tensor.name(), ortvalue_initializer);
   } else {
     // XXX: This is for cases when the data is short. At the moment we only keep it
     // inside the TensorProto

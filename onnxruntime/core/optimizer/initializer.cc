@@ -85,6 +85,12 @@ Initializer::Initializer(const Graph& graph, const ONNX_NAMESPACE::TensorProto& 
 
 Initializer::~Initializer() = default;
 
+void Initializer::ToProtoWithOrtValue(ONNX_NAMESPACE::TensorProto& tensor_proto, OrtValue& ort_value) const {
+  constexpr const bool user_tensor_buffer_true = true;
+  tensor_proto = utils::TensorToTensorProto(*data_, name_, user_tensor_buffer_true);
+  ort_value = ort_value_;
+}
+
 #if !defined(ORT_EXTENDED_MINIMAL_BUILD)
 namespace {
 template <typename T>

@@ -995,6 +995,8 @@ struct ProviderHost {
   virtual const std::unordered_map<std::string, int>& Graph__DomainToVersionMap(const Graph* p) const noexcept = 0;
   virtual Status Graph__Resolve(Graph* p) = 0;
   virtual void Graph__AddInitializedTensor(Graph* p, const ONNX_NAMESPACE::TensorProto& tensor) = 0;
+  // We pass OrtValue by reference here (as opposed to the original Graph function) to avoid header inclusion
+  virtual Status Graph__AddInitializedOrtValue(Graph* p, const ONNX_NAMESPACE::TensorProto& tensor, const OrtValue& value) = 0;
   virtual Node& Graph__AddNode(Graph* p, const std::string& name, const std::string& op_type, const std::string& description, const gsl::span<NodeArg* const>& input_args, const gsl::span<NodeArg* const>& output_args, const NodeAttributes* attributes, const std::string& domain) = 0;
   virtual Node& Graph__AddNode(Graph* p, const std::string& name, const std::string& op_type, const std::string& description, const gsl::span<NodeArg* const>& input_args, const gsl::span<NodeArg* const>& output_args, NodeAttributes&& attributes, const std::string& domain) = 0;
   virtual Node& Graph__AddNode(Graph* p, const Node& other) = 0;

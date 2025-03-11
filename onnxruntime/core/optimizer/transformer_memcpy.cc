@@ -6,6 +6,7 @@
 #include "core/framework/kernel_registry_manager.h"
 #include "core/framework/execution_providers.h"
 #include "core/framework/utils.h"
+#include "core/graph/graph_utils.h"
 
 using namespace ONNX_NAMESPACE;
 namespace onnxruntime {
@@ -383,9 +384,19 @@ bool TransformerMemcpyImpl::ProcessInitializers(const KernelRegistryManager& ker
       // This should not directly affect runtime performance as the copies occur during initialization
       // but overuse of the provider device's memory is definitely inefficient
       // In future, we need to "statefully" make the copy only once and use it in all subgraphs referencing the initializer
+
       TensorProto new_tensor_proto = *tensor_proto;
       *(new_tensor_proto.mutable_name()) = new_def_name;
-      graph_.AddInitializedTensor(new_tensor_proto);
+
+      // Query any OrtValue existing for the original initializer
+      OrtValue ort_value;
+      if (graph_.GetOrtValueInitializer(name, ort_value)) {
+        // Re-use the same ort_value and proto that points to the same buffer
+        ORT_IGNORE_RETURN_VALUE(graph_utils::AddInitializerWithExternalData(graph_, new_tensor_proto,
+                                                                            std::move(ort_value)));
+      } else {
+        ORT_IGNORE_RETURN_VALUE(graph_utils::AddInitializerWithExternalData(graph_, new_tensor_proto));
+      }
 
       replacements.insert(std::make_pair(provider_def, &new_def));
     }
