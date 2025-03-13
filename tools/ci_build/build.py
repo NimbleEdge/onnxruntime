@@ -1909,9 +1909,8 @@ def generate_build_tree(
                         "-Wp,-D_FORTIFY_SOURCE=2",
                         "-Wp,-D_GLIBCXX_ASSERTIONS",
                         "-fstack-protector-strong",
-                        "-Os",
-                        "-pipe",
-                        "-g",
+                        "-Oz",
+                        "-pipe"
                     ]
                 if is_linux() and platform.machine() == "x86_64" and not args.build_wasm:
                     # The following flags needs GCC 8 and newer
