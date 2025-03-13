@@ -2712,7 +2712,7 @@ def main():
                 reduce_ops(
                     config_path=args.include_ops_by_config,
                     build_dir=get_config_build_dir(build_dir, config),
-                    enable_type_reduction=args.enable_reduced_operator_type_support,
+                    enable_type_reduction=True,
                     use_cuda=args.use_cuda,
                     is_extended_minimal_build_or_higher=is_extended_minimal_build_or_higher,
                 )

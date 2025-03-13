@@ -113,7 +113,9 @@ if (onnxruntime_ENABLE_LTO)
       message(WARNING "IPO is not supported by this compiler")
       set(onnxruntime_ENABLE_LTO OFF)
     else()
-      set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+      # CMake's IPO enables thinLTO, we are using full LTO as it is better
+      string(APPEND CMAKE_C_FLAGS " -flto")
+      string(APPEND CMAKE_CXX_FLAGS " -flto")
     endif()
 endif()
 

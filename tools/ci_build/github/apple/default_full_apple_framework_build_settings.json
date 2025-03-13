@@ -16,8 +16,15 @@
             "--skip_tests",
             "--cmake_extra_defines=onnxruntime_BUILD_UNIT_TESTS=OFF",
             "--disable_rtti",
+            "--enable_reduced_operator_type_support",
             "--build_shared_lib",
-            "--enable_lto"
+            "--minimal_build",
+            "--disable_types sparsetensor float8 optional",
+            "--enable_lto",
+            "--cmake_extra_defines=onnxruntime_DISABLE_SPARSE_TENSORS =ON",
+            "--cmake_extra_defines=onnxruntime_DISABLE_OPTIONAL_TYPE =ON",
+            "--cmake_extra_defines=onnxruntime_DISABLE_FLOAT8_TYPES=ON",
+            "--cmake_extra_defines=onnxruntime_ENABLE_CPUINFO=OFF"
         ],
         "macosx": [
             "--macos=MacOSX",
