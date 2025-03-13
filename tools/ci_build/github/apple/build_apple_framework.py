@@ -243,7 +243,7 @@ def parse_args():
     parser.add_argument(
         "--config",
         type=str,
-        default="Release",
+        default="MinSizeRel",
         choices=["Debug", "MinSizeRel", "Release", "RelWithDebInfo"],
         help="Configuration to build.",
     )
