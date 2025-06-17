@@ -9,5 +9,5 @@ onnx==1.17.0 ; python_version < '3.13'
 argparse
 sympy==1.12
 flatbuffers
-protobuf==4.21.12
+protobuf==4.25.8
 packaging
