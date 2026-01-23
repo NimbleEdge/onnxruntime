@@ -4,7 +4,7 @@ pytest
 setuptools>=68.2.2
 wheel
 onnx==1.17.0
-protobuf==4.21.12
+protobuf==7.34.0rc1
 sympy==1.12
 flatbuffers
 psutil
